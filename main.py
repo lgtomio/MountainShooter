@@ -1,11 +1,11 @@
 import pygame
 
-print('Setup Start')
+print('Inicio do Programa')
 pygame.init()
-window = pygame.display.set_mode(size=(600, 480))
-print('Setup End')
+window = pygame.display.set_mode(size=(600, 600))
+print('Fim do Programa')
 
-print('Loop Start')
+print('Início do Loop')
 while True:
     # Check for all avents
     for event in pygame.event.get():
