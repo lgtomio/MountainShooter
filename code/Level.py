@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import random
 import sys
 
 import pygame.display
@@ -7,7 +8,7 @@ import pygame.event
 from pygame import Surface, Rect
 from pygame.font import Font
 
-from code.Const import C_WHITE, WIN_HEIGHT
+from code.Const import C_WHITE, WIN_HEIGHT, EVENT_ENEMY
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 
@@ -19,7 +20,9 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
+        self.entity_list.append(EntityFactory.get_entity('Player1'))
         self.timeout = 20000  # 20 segundos
+        pygame.time.set_timer(EVENT_ENEMY, 2000)
 
     def run(self):
         pygame.mixer_music.load(f'./asset/{self.name}.mp3')
@@ -34,13 +37,16 @@ class Level:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == EVENT_ENEMY:
+                    choice = random.choice(('Enemy1','Enemy2'))
+                    self.entity_list.append(EntityFactory.get_entity(choice))
 
             # printed text
             self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000:.1f}s', C_WHITE, (10, 5))
             self.level_text(14, f'fps: {clock.get_fps() :.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
             self.level_text(14, f'entidades: {len(self.entity_list)}', C_WHITE, (10, WIN_HEIGHT - 20))
             pygame.display.flip()
-        pass
+            pass
 
     def level_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
         text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
